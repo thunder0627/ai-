@@ -413,3 +413,49 @@ aside {
 .mind-map-branch {
     position: relative;
 }
+
+/* 1. 统一所有交互按钮的基础样式 */
+.btn, 
+.session-item, 
+.sidebar-toggle, 
+.chat-input button,
+.chat-input label {
+    background-color: transparent !important; /* 强制背景透明 */
+    border: 1px solid rgba(99, 102, 241, 0.3); /* 淡淡的边框色，防止完全看不见 */
+    color: #4f46e5; /* 字体颜色 */
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* 弹性过渡 */
+    position: relative;
+    overflow: hidden;
+}
+
+/* 2. 悬停时的上跳效果 */
+.btn:hover, 
+.session-item:hover, 
+.sidebar-toggle:hover, 
+.chat-input button:not(:disabled):hover,
+.chat-input label:hover {
+    transform: translateY(-4px); /* 向上跳动 */
+    background-color: rgba(99, 102, 241, 0.08) !important; /* 悬停时极淡的背景 */
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.2); /* 悬浮阴影 */
+    border-color: #6366f1; /* 边框加深 */
+}
+
+/* 3. 侧边栏条目特殊微调 */
+.session-item {
+    border: 1px solid transparent; /* 侧边栏平时隐藏边框 */
+    margin-bottom: 4px;
+}
+
+/* 4. 点击时的反馈 */
+.btn:active, .session-item:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 5. 禁用状态处理 */
+.btn:disabled {
+    opacity: 0.5;
+    transform: none !important;
+    cursor: not-allowed;
+    border-color: #ccc;
+}
