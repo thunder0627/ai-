@@ -1,4 +1,4 @@
-const { createApp, ref, reactive, onMounted, nextTick } = Vue;
+const { createApp, ref, reactive, onMounted, nextTick, watch } = Vue;
 
 createApp({
     setup() {
@@ -45,7 +45,117 @@ createApp({
             { id: 4, title: '语言学习', desc: '模拟外语对话场景。', icon: 'fa-solid fa-language', color: 'text-indigo-600' }
         ]);
 
-        // ================= 生命周期 =================
+        // 进度数据（用于动态展示）
+        const progressData = ref({
+            attendance: 0,
+            homeworks: 0,
+            rating: 0
+        });
+
+        // 柱状图数据（用于动态展示）
+        const chartData = ref([
+            { name: '一月', value: 0, target: 65 },
+            { name: '二月', value: 0, target: 59 },
+            { name: '三月', value: 0, target: 80 },
+            { name: '四月', value: 0, target: 81 },
+            { name: '五月', value: 0, target: 56 },
+            { name: '六月', value: 0, target: 55 },
+            { name: '七月', value: 0, target: 40 }
+        ]);
+
+        // 最近活动数据
+        const recentActivities = ref([
+            {
+                id: 1,
+                title: '教案生成',
+                description: '成功生成了高等数学的教学教案',
+                time: '今天 10:30',
+                icon: 'fa-solid fa-file-lines text-white',
+                color: 'bg-blue-500'
+            },
+            {
+                id: 2,
+                title: '课件上传',
+                description: '上传了数据结构课程的PPT课件',
+                time: '昨天 15:45',
+                icon: 'fa-solid fa-upload text-white',
+                color: 'bg-green-500'
+            },
+            {
+                id: 3,
+                title: '思维导图',
+                description: '生成了人工智能课程的思维导图',
+                time: '2天前',
+                icon: 'fa-solid fa-sitemap text-white',
+                color: 'bg-purple-500'
+            }
+        ]);
+
+        // 动态进度动画
+        const animateProgress = () => {
+            // 目标值
+            const targetAttendance = 85;
+            const targetHomeworks = 92;
+            const targetRating = 96;
+
+            // 动画时长（毫秒）
+            const duration = 1500;
+            const startTime = Date.now();
+
+            // 初始值
+            const startAttendance = 0;
+            const startHomeworks = 0;
+            const startRating = 0;
+
+            // 动画函数
+            const updateProgress = () => {
+                const elapsedTime = Date.now() - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+
+                // 使用缓动函数
+                const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+
+                progressData.value.attendance = Math.floor(startAttendance + (targetAttendance - startAttendance) * easeOutQuad);
+                progressData.value.homeworks = Math.floor(startHomeworks + (targetHomeworks - startHomeworks) * easeOutQuad);
+                progressData.value.rating = Math.floor(startRating + (targetRating - startRating) * easeOutQuad);
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateProgress);
+                }
+            };
+
+            // 开始动画
+            updateProgress();
+        };
+
+        // 柱状图动画
+        const animateChart = () => {
+            // 动画时长（毫秒）
+            const duration = 1800;
+            const startTime = Date.now();
+
+            // 动画函数
+            const updateChart = () => {
+                const elapsedTime = Date.now() - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+
+                // 使用缓动函数
+                const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+
+                chartData.value.forEach(item => {
+                    item.value = Math.floor(0 + (item.target - 0) * easeOutQuad);
+                });
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateChart);
+                }
+            };
+
+            // 开始动画
+            updateChart();
+        };
+
+        // 页面加载时执行动画
         onMounted(() => {
             const token = localStorage.getItem('ai_auth_token');
             if (token) {
@@ -85,6 +195,33 @@ createApp({
                 { id: 4, title: '线性代数基础', type: '数学科学', description: '矩阵运算、向量空间、特征值等核心概念', created_at: new Date().toISOString() },
                 { id: 5, title: '中国历史概览', type: '人文社科', description: '从古代到现代的中国历史发展脉络', created_at: new Date().toISOString() }
             ];
+
+            // 延迟执行，确保DOM已渲染
+            setTimeout(() => {
+                animateProgress();
+                animateChart();
+            }, 300);
+        });
+
+        // 监听视图变化，当切换到欢迎页时执行动画
+        watch(currentView, (newView) => {
+            if (newView === 'welcome') {
+                // 重置数据
+                progressData.value.attendance = 0;
+                progressData.value.homeworks = 0;
+                progressData.value.rating = 0;
+
+                // 重置柱状图数据
+                chartData.value.forEach(item => {
+                    item.value = 0;
+                });
+
+                // 延迟执行，确保DOM已渲染
+                setTimeout(() => {
+                    animateProgress();
+                    animateChart();
+                }, 300);
+            }
         });
 
         // ================= API 交互方法 =================
@@ -603,7 +740,8 @@ createApp({
             historyList, favoritesList, addToFavorites, removeFromFavorites, featureCards, handleFileUpload,
             courseList, courseForm, addCourse, deleteCourse, uploadCourseware, deleteCourseware, getFileIcon,
             knowledgeList, knowledgeTypes, knowledgeForm, addKnowledge, deleteKnowledge, getKnowledgeByType, getKnowledgeTypeIcon, formatDate,
-            isGeneratingMindMap, mindMapData, generateMindMap, refreshMindMap, exportMindMap, guestLogin
+            isGeneratingMindMap, mindMapData, generateMindMap, refreshMindMap, exportMindMap, guestLogin,
+            progressData, chartData
         };
     }
 }).mount('#app');
