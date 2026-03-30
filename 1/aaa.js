@@ -125,8 +125,20 @@ createApp({
                 if (!loginForm.phone) {
                     throw new Error('请输入手机号');
                 }
+                if (!/^1[3-9]\d{9}$/.test(loginForm.phone)) {
+                    throw new Error('请输入正确的手机号');
+                }
                 if (!loginForm.verificationCode) {
                     throw new Error('请输入验证码');
+                }
+                if (!loginForm.password) {
+                    throw new Error('请设置密码');
+                }
+                if (loginForm.password.length < 6) {
+                    throw new Error('密码长度不能少于6位');
+                }
+                if (loginForm.password.length > 12) {
+                    throw new Error('密码长度不能超过12位');
                 }
                 if (loginForm.password !== loginForm.confirmPassword) {
                     throw new Error('两次输入的密码不一致');
@@ -165,7 +177,7 @@ createApp({
 
             // 模拟发送验证码
             setTimeout(() => {
-                alert('验证码已发送到您的手机，验证码为：123456');
+                alert('验证码已发送到您的手机,请及时查收');
                 // 开始倒计时
                 let timer = setInterval(() => {
                     countdown.value--;
