@@ -168,20 +168,174 @@
                 <div class="flex-1 overflow-hidden relative">
                     <!-- 欢迎页 -->
                     <div v-if="currentView === 'welcome'"
-                        class="h-full overflow-y-auto flex flex-col items-center justify-center p-8">
-                        <div class="max-w-2xl w-full text-center space-y-8">
-                            <h1 class="text-3xl font-bold text-gray-800">准备好开始学习了吗？</h1>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                                <div v-for="feature in featureCards" :key="feature.id"
-                                    class="p-4 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer">
-                                    <div :class="['mb-2', feature.color]"><i :class="feature.icon"></i></div>
-                                    <h3 class="font-semibold text-gray-800">{{ feature.title }}</h3>
-                                    <p class="text-sm text-gray-500">{{ feature.desc }}</p>
+                        class="h-full overflow-y-auto p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+                        <div class="max-w-6xl mx-auto space-y-8">
+                            <!-- 智能体介绍 -->
+                            <div class="bg-white rounded-2xl p-8 shadow-sm">
+                                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                                    <div class="md:w-1/2 space-y-4">
+                                        <h1 class="text-3xl font-bold text-gray-800">AI 教学智能体</h1>
+                                        <p class="text-gray-600">
+                                            您的个人学习助手，帮助您生成教案、思维导图，管理课程表和知识库。
+                                            无论您是教师还是学生，我们都能为您提供智能的教学辅助工具。
+                                        </p>
+                                        <div class="flex gap-4">
+                                            <button @click="enterChatMode" class="btn btn-primary">
+                                                开始对话
+                                            </button>
+                                            <button v-if="!isLoggedIn" @click="showLoginModal = true"
+                                                class="btn btn-secondary">
+                                                登录
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="md:w-1/2">
+                                        <div class="relative">
+                                            <div
+                                                class="absolute -top-4 -right-4 w-20 h-20 bg-indigo-100 rounded-full opacity-50">
+                                            </div>
+                                            <div
+                                                class="absolute -bottom-4 -left-4 w-16 h-16 bg-blue-100 rounded-full opacity-50">
+                                            </div>
+                                            <div
+                                                class="relative bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl p-6 text-white text-center">
+                                                <i class="fa-regular fa-lightbulb text-4xl mb-4"></i>
+                                                <h3 class="text-xl font-semibold mb-2">智能教学助手</h3>
+                                                <p class="text-sm opacity-90">为您的教学提供全方位支持</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <button @click="enterChatMode" class="btn btn-primary mt-8">
-                                开始对话
-                            </button>
+
+                            <!-- 数据展示 -->
+                            <div class="bg-white rounded-2xl p-8 shadow-sm">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">教学数据概览</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <!-- 圆形进度条 1 -->
+                                    <div class="text-center">
+                                        <div class="relative w-32 h-32 mx-auto mb-4">
+                                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb"
+                                                    stroke-width="8" />
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#6366f1"
+                                                    stroke-width="8" stroke-linecap="round" :stroke-dasharray="283"
+                                                    :stroke-dashoffset="283 - (283 * progressData.attendance) / 100"
+                                                    transform="rotate(-90 50 50)"
+                                                    class="transition-all duration-1000 ease-out" />
+                                            </svg>
+                                            <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                                <span class="text-2xl font-bold">{{ progressData.attendance }}%</span>
+                                                <span class="text-sm text-gray-500">出勤率</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 圆形进度条 2 -->
+                                    <div class="text-center">
+                                        <div class="relative w-32 h-32 mx-auto mb-4">
+                                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb"
+                                                    stroke-width="8" />
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#8b5cf6"
+                                                    stroke-width="8" stroke-linecap="round" :stroke-dasharray="283"
+                                                    :stroke-dashoffset="283 - (283 * progressData.homeworks) / 100"
+                                                    transform="rotate(-90 50 50)"
+                                                    class="transition-all duration-1000 ease-out" />
+                                            </svg>
+                                            <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                                <span class="text-2xl font-bold">{{ progressData.homeworks }}%</span>
+                                                <span class="text-sm text-gray-500">作业完成率</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 圆形进度条 3 -->
+                                    <div class="text-center">
+                                        <div class="relative w-32 h-32 mx-auto mb-4">
+                                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb"
+                                                    stroke-width="8" />
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981"
+                                                    stroke-width="8" stroke-linecap="round" :stroke-dasharray="283"
+                                                    :stroke-dashoffset="283 - (283 * progressData.rating) / 100"
+                                                    transform="rotate(-90 50 50)"
+                                                    class="transition-all duration-1000 ease-out" />
+                                            </svg>
+                                            <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                                <span class="text-2xl font-bold">{{ progressData.rating }}%</span>
+                                                <span class="text-sm text-gray-500">满意度</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 柱状图数据展示 -->
+                            <div class="bg-white rounded-2xl p-8 shadow-sm">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">月度教学数据</h2>
+                                <div class="h-80">
+                                    <div class="flex items-end justify-between h-full gap-4">
+                                        <div v-for="(item, index) in chartData" :key="index"
+                                            class="flex flex-col items-center flex-1">
+                                            <div class="w-8 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg transition-all duration-1000 ease-out"
+                                                :style="{ height: `${item.value * 100 / 100}%` }">
+                                            </div>
+                                            <span class="mt-2 text-sm font-medium">{{ item.value }}</span>
+                                            <span class="text-xs text-gray-500">{{ item.name }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 功能卡片 -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                                        <i class="fa-solid fa-chalkboard-teacher text-blue-500 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">教案生成</h3>
+                                    <p class="text-sm text-gray-600">快速生成专业教案，包含教学目标、重难点和教学过程。</p>
+                                </div>
+                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                    <div
+                                        class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                                        <i class="fa-solid fa-sitemap text-purple-500 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">思维导图</h3>
+                                    <p class="text-sm text-gray-600">基于课程内容自动生成思维导图，帮助学生理解知识结构。</p>
+                                </div>
+                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                    <div
+                                        class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                                        <i class="fa-solid fa-calendar-check text-green-500 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">课程管理</h3>
+                                    <p class="text-sm text-gray-600">管理课程表，上传课件，跟踪教学进度，提高教学效率。</p>
+                                </div>
+                            </div>
+
+                            <!-- 最近活动 -->
+                            <div class="bg-white rounded-2xl p-8 shadow-sm">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-xl font-bold text-gray-800">最近活动</h2>
+                                    <button class="text-sm text-indigo-600 hover:text-indigo-700">查看全部</button>
+                                </div>
+                                <div class="space-y-4">
+                                    <div v-for="activity in recentActivities" :key="activity.id"
+                                        class="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
+                                        <div
+                                            :class="['w-10 h-10 rounded-full flex items-center justify-center', activity.color]">
+                                            <i :class="activity.icon"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-medium text-gray-800">{{ activity.title }}</h4>
+                                            <p class="text-sm text-gray-500">{{ activity.description }}</p>
+                                            <p class="text-xs text-gray-400 mt-1">{{ activity.time }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -239,36 +393,34 @@
 
                             <!-- 添加课程表单 -->
                             <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4">添加课程</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">添加课程</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">课程名称</label>
                                         <input v-model="courseForm.name" type="text"
-                                            class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            placeholder="输入课程名称">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">上课时间</label>
-                                        <input v-model="courseForm.time" type="text"
-                                            class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            placeholder="例如：周一 9:00-10:30">
+                                        <input v-model="courseForm.time" type="text" placeholder="如：周一 9:00-10:30"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">教室</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">上课地点</label>
                                         <input v-model="courseForm.room" type="text"
-                                            class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            placeholder="例如：A101">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">教师</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">授课教师</label>
                                         <input v-model="courseForm.teacher" type="text"
-                                            class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            placeholder="输入教师姓名">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                 </div>
-                                <button @click="addCourse" class="btn btn-primary mt-4">
-                                    <i class="fa-solid fa-plus mr-2"></i>添加课程
-                                </button>
+                                <div class="mt-4">
+                                    <button @click="addCourse" class="btn btn-primary">
+                                        <i class="fa-solid fa-plus mr-2"></i>添加课程
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- 课程列表 -->
@@ -322,10 +474,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="courseList.length === 0" class="text-center py-12 text-gray-400">
-                                    <i class="fa-solid fa-calendar-days text-4xl mb-4"></i>
-                                    <p>暂无课程，请添加课程</p>
-                                </div>
+                            </div>
+
+                            <div v-if="courseList.length === 0" class="text-center py-12 text-gray-400">
+                                <i class="fa-solid fa-calendar-days text-4xl mb-4"></i>
+                                <p>暂无课程，请添加课程</p>
                             </div>
                         </div>
                     </div>
@@ -363,7 +516,8 @@
                                     <div v-if="isGeneratingMindMap" class="flex items-center justify-center py-20">
                                         <div class="text-center">
                                             <div class="flex justify-center space-x-2 mb-4">
-                                                <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
+                                                <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce">
+                                                </div>
                                                 <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
                                                     style="animation-delay: 0.2s"></div>
                                                 <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
