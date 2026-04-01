@@ -54,15 +54,15 @@ createApp({
 
         // 柱状图数据（用于动态展示）
         const chartData = ref([
-            { name: '一月', value: 0, target: 65 },
-            { name: '二月', value: 0, target: 59 },
-            { name: '三月', value: 0, target: 80 },
-            { name: '四月', value: 0, target: 81 },
-            { name: '五月', value: 0, target: 56 },
-            { name: '六月', value: 0, target: 55 },
-            { name: '七月', value: 0, target: 40 }
+            { name: '一月', value: 0, target: 120 },
+            { name: '二月', value: 0, target: 150 },
+            { name: '三月', value: 0, target: 180 },
+            { name: '四月', value: 0, target: 210 },
+            { name: '五月', value: 0, target: 250 },
+            { name: '六月', value: 0, target: 280 },
+            { name: '七月', value: 0, target: 320 }
         ]);
-
+        
         // 最近活动数据
         const recentActivities = ref([
             {
@@ -128,7 +128,7 @@ createApp({
             updateProgress();
         };
 
-        // 柱状图动画
+       // 柱状图动画
         const animateChart = () => {
             // 动画时长（毫秒）
             const duration = 1800;
@@ -203,7 +203,7 @@ createApp({
             }, 300);
         });
 
-        // 监听视图变化，当切换到欢迎页时执行动画
+         // 监听视图变化，当切换到欢迎页时执行动画
         watch(currentView, (newView) => {
             if (newView === 'welcome') {
                 // 重置数据
