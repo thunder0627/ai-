@@ -114,6 +114,23 @@ aside {
     bottom: 0;
 }
 
+/* 输入区域布局 - 左右分开 */
+.chat-input .input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.chat-input .input-wrapper .input {
+    flex: 1;
+}
+
+.chat-input .input-wrapper .btn-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 /* 消息气泡 */
 .message {
     max-width: 65%;
@@ -146,15 +163,29 @@ aside {
     position: relative;
 }
 
+/* AI消息内的操作按钮组 */
+.message-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(59, 130, 246, 0.2);
+    padding-top: 8px;
+}
+
 .message.ai button {
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
     font-size: 12px;
     transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #3b82f6;
 }
 
 .message.ai button:hover {
+    background: rgba(59, 130, 246, 0.1);
     transform: scale(1.05);
 }
 
@@ -413,49 +444,129 @@ aside {
 .mind-map-branch {
     position: relative;
 }
-
-/* 1. 统一所有交互按钮的基础样式 */
-.btn, 
-.session-item, 
-.sidebar-toggle, 
-.chat-input button,
-.chat-input label {
-    background-color: transparent !important; /* 强制背景透明 */
-    border: 1px solid rgba(99, 102, 241, 0.3); /* 淡淡的边框色，防止完全看不见 */
-    color: #4f46e5; /* 字体颜色 */
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* 弹性过渡 */
+/*所有可交互按钮都有基础透明和弹跳效果*/
+.btn,
+.modal-content button,
+.chat-input .btn-group button,
+.chat-input .btn-group label,
+.chat-header button,
+.chat-history button,
+.message-actions button,
+.sidebar-toggle {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+/*  输入区域的按钮透明效果 */
+.chat-input .btn-group button,
+.chat-input .btn-group label {
+    background-color: transparent !important;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #4f46e5;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-/* 2. 悬停时的上跳效果 */
-.btn:hover, 
-.session-item:hover, 
-.sidebar-toggle:hover, 
-.chat-input button:not(:disabled):hover,
-.chat-input label:hover {
-    transform: translateY(-4px); /* 向上跳动 */
-    background-color: rgba(99, 102, 241, 0.08) !important; /* 悬停时极淡的背景 */
-    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.2); /* 悬浮阴影 */
-    border-color: #6366f1; /* 边框加深 */
+/* 侧边栏切换按钮添加上跳效果 */
+.sidebar-toggle {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 
-/* 3. 侧边栏条目特殊微调 */
+.sidebar-toggle:hover {
+    transform: translateY(-4px);
+    background: #f8faff;
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.2);
+}
+
+/*  侧边栏内的按钮保持原有样式 */
+.sidebar-content .btn,
+.sidebar-content button {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.sidebar-content .btn:hover,
+.sidebar-content button:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/*  会话列表条目样式 */
 .session-item {
-    border: 1px solid transparent; /* 侧边栏平时隐藏边框 */
-    margin-bottom: 4px;
+    border: 1px solid transparent;
+    background-color: transparent !important;
+    transition: all 0.2s ease !important;
 }
 
-/* 4. 点击时的反馈 */
-.btn:active, .session-item:active {
+.session-item:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 输入区域按钮悬停上跳效果 */
+.chat-input .btn-group button:not(:disabled):hover,
+.chat-input .btn-group label:not(:disabled):hover {
+    transform: translateY(-4px);
+    background-color: rgba(99, 102, 241, 0.08) !important;
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.2);
+    border-color: #6366f1;
+}
+
+/* AI消息按钮悬停效果 */
+.message-actions button:hover {
+    transform: translateY(-2px) !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/*  点击时的反馈 */
+.chat-input .btn-group button:active,
+.chat-input .btn-group label:active,
+.sidebar-toggle:active {
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 5. 禁用状态处理 */
+/*  禁用状态处理 */
+button:disabled,
 .btn:disabled {
     opacity: 0.5;
     transform: none !important;
     cursor: not-allowed;
-    border-color: #ccc;
+    border-color: #ccc !important;
+}
+
+/*  输入区域的发送按钮特殊样式（如果有主按钮样式） */
+.chat-input .btn-group .btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.chat-input .btn-group .btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.4);
+}
+
+/*  上传文件按钮的图标样式 */
+.chat-input .btn-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/*  确保输入区域按钮左右布局正确 */
+.chat-input .btn-group {
+    display: flex;
+    gap: 12px;
+}
+
+.chat-input .btn-group button:first-child,
+.chat-input .btn-group label:first-child {
+    margin-right: 0;
 }
