@@ -203,6 +203,16 @@ createApp({
             }, 300);
         });
 
+         // 只在用户登录且当前是欢迎页时执行动画
+            if (isLoggedIn.value && currentView.value === 'welcome') {
+                // 延迟执行，确保DOM已渲染
+                setTimeout(() => {
+                    animateProgress();
+                    animateChart();
+                }, 300);
+            }
+        });
+
          // 监听视图变化，当切换到欢迎页时执行动画
         watch(currentView, (newView) => {
             if (newView === 'welcome') {
