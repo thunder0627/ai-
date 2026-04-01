@@ -62,7 +62,7 @@ createApp({
             { name: '六月', value: 0, target: 280 },
             { name: '七月', value: 0, target: 320 }
         ]);
-        
+
         // 最近活动数据
         const recentActivities = ref([
             {
@@ -128,7 +128,7 @@ createApp({
             updateProgress();
         };
 
-       // 柱状图动画
+        // 柱状图动画
         const animateChart = () => {
             // 动画时长（毫秒）
             const duration = 1800;
@@ -196,14 +196,7 @@ createApp({
                 { id: 5, title: '中国历史概览', type: '人文社科', description: '从古代到现代的中国历史发展脉络', created_at: new Date().toISOString() }
             ];
 
-            // 延迟执行，确保DOM已渲染
-            setTimeout(() => {
-                animateProgress();
-                animateChart();
-            }, 300);
-        });
-
-         // 只在用户登录且当前是欢迎页时执行动画
+            // 只在用户登录且当前是欢迎页时执行动画
             if (isLoggedIn.value && currentView.value === 'welcome') {
                 // 延迟执行，确保DOM已渲染
                 setTimeout(() => {
@@ -213,7 +206,7 @@ createApp({
             }
         });
 
-         // 监听视图变化，当切换到欢迎页时执行动画
+        // 监听视图变化，当切换到欢迎页时执行动画
         watch(currentView, (newView) => {
             if (newView === 'welcome') {
                 // 重置数据
@@ -256,6 +249,25 @@ createApp({
                     ];
                     isLoggingIn.value = false;
                     showLoginModal.value = false;
+
+                    // 登录成功后，如果当前是欢迎页，执行动画
+                    if (currentView.value === 'welcome') {
+                        // 重置数据
+                        progressData.value.attendance = 0;
+                        progressData.value.homeworks = 0;
+                        progressData.value.rating = 0;
+
+                        // 重置柱状图数据
+                        chartData.value.forEach(item => {
+                            item.value = 0;
+                        });
+
+                        // 延迟执行，确保DOM已渲染
+                        setTimeout(() => {
+                            animateProgress();
+                            animateChart();
+                        }, 300);
+                    }
                 }, 500);
             } catch (error) {
                 console.error('Login error:', error);
