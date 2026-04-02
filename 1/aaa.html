@@ -290,14 +290,16 @@
 
                             <!-- 功能卡片 -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                <div @click="currentView = 'chat'"
+                                    class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                                     <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                                         <i class="fa-solid fa-chalkboard-teacher text-blue-500 text-xl"></i>
                                     </div>
                                     <h3 class="text-lg font-semibold text-gray-800 mb-2">教案生成</h3>
                                     <p class="text-sm text-gray-600">快速生成专业教案，包含教学目标、重难点和教学过程。</p>
                                 </div>
-                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                <div @click="handleKnowledgeClick()"
+                                    class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                                     <div
                                         class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
                                         <i class="fa-solid fa-sitemap text-purple-500 text-xl"></i>
@@ -305,7 +307,8 @@
                                     <h3 class="text-lg font-semibold text-gray-800 mb-2">思维导图</h3>
                                     <p class="text-sm text-gray-600">基于知识库，为用户介绍我们可以生成课件的内容范围。</p>
                                 </div>
-                                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                <div @click="handleScheduleClick()"
+                                    class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                                     <div
                                         class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                                         <i class="fa-solid fa-calendar-check text-green-500 text-xl"></i>
