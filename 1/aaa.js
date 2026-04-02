@@ -445,6 +445,28 @@ createApp({
             else messages.value = [{ role: 'ai', content: '新对话已开始。' }];
         };
 
+        // 处理思维导图点击
+        const handleKnowledgeClick = () => {
+            if (!isLoggedIn.value) {
+                // 显示登录弹窗
+                showLoginModal.value = true;
+            } else {
+                // 跳转到知识库页面
+                currentView.value = 'knowledge';
+            }
+        };
+
+        // 处理课程管理点击
+        const handleScheduleClick = () => {
+            if (!isLoggedIn.value) {
+                // 显示登录弹窗
+                showLoginModal.value = true;
+            } else {
+                // 跳转到课程表页面
+                currentView.value = 'schedule';
+            }
+        };
+        
         // 权限检查，确保未登录用户只能访问聊天功能
         const checkPermission = (view) => {
             if ((view === 'schedule' || view === 'knowledge') && !isLoggedIn.value) {
