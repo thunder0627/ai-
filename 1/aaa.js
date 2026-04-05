@@ -198,7 +198,7 @@ createApp({
             ];
 
             // 只在用户登录且当前是欢迎页时执行动画
-            if (isLoggedIn.value && currentView.value === 'welcome') {
+            if (isLoggedIn.value && currentView.value === 'dashboard') {
                 // 延迟执行，确保DOM已渲染
                 setTimeout(() => {
                     animateProgress();
@@ -209,7 +209,7 @@ createApp({
 
         // 监听视图变化，当切换到欢迎页时执行动画
         watch(currentView, (newView) => {
-            if (newView === 'welcome') {
+            if (newView === 'dashboard') {
                 // 重置数据
                 progressData.value.attendance = 0;
                 progressData.value.homeworks = 0;
@@ -251,24 +251,24 @@ createApp({
                     isLoggingIn.value = false;
                     showLoginModal.value = false;
 
-                    // 登录成功后，如果当前是欢迎页，执行动画
-                    if (currentView.value === 'welcome') {
-                        // 重置数据
-                        progressData.value.attendance = 0;
-                        progressData.value.homeworks = 0;
-                        progressData.value.rating = 0;
+                     // 登录成功后，跳转到数据页并执行动画
+                    currentView.value = 'dashboard';
 
-                        // 重置柱状图数据
-                        chartData.value.forEach(item => {
-                            item.value = 0;
-                        });
+                    // 重置数据
+                    progressData.value.attendance = 0;
+                    progressData.value.homeworks = 0;
+                    progressData.value.rating = 0;
 
-                        // 延迟执行，确保DOM已渲染
-                        setTimeout(() => {
-                            animateProgress();
-                            animateChart();
-                        }, 300);
-                    }
+                    // 重置柱状图数据
+                    chartData.value.forEach(item => {
+                        item.value = 0;
+                    });
+
+                    // 延迟执行，确保DOM已渲染
+                    setTimeout(() => {
+                        animateProgress();
+                        animateChart();
+                    }, 300);
                 }, 500);
             } catch (error) {
                 console.error('Login error:', error);
@@ -276,7 +276,6 @@ createApp({
                 isLoggingIn.value = false;
             }
         };
-
         // 2. 注册接口（假注册）
         const handleRegister = async () => {
             isLoggingIn.value = true;
