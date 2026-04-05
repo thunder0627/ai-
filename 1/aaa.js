@@ -783,15 +783,15 @@ createApp({
             event.target.value = '';
         };
 
-        return {
+      return {
             isLoggedIn, showLoginModal, isLoggingIn, isRegistering, isSendingCode, countdown, loginError, loginForm, handleLogin, handleRegister, sendVerificationCode, logout,
-            isSidebarOpen, toggleSidebar, currentView, enterChatMode, startNewChat, checkPermission,
+            isSidebarOpen, toggleSidebar, currentView, enterChatMode, startNewChat, checkPermission, handleKnowledgeClick, handleScheduleClick, handleChatClick, showPermissionModal,
             inputMessage, messages, isLoading, sendMessage, autoResize, formatMessage,
             historyList, favoritesList, addToFavorites, removeFromFavorites, featureCards, handleFileUpload,
             courseList, courseForm, addCourse, deleteCourse, uploadCourseware, deleteCourseware, getFileIcon,
             knowledgeList, knowledgeTypes, knowledgeForm, addKnowledge, deleteKnowledge, getKnowledgeByType, getKnowledgeTypeIcon, formatDate,
             isGeneratingMindMap, mindMapData, generateMindMap, refreshMindMap, exportMindMap, guestLogin,
-            progressData, chartData
+            progressData, chartData, recentActivities
         };
     }
 }).mount('#app');
