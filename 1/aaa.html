@@ -347,12 +347,14 @@
                                             </svg>
 
                                         </div>
-                                        <div class="mt-4 space-y-2">
-                                            <div v-for="(item, index) in ageData" :key="index"
-                                                class="flex items-center justify-start space-x-2">
-                                                <div :style="{ backgroundColor: item.color }"
-                                                    class="w-3 h-3 rounded-full"></div>
-                                                <span class="text-sm">{{ item.name }}: {{ item.value }}%</span>
+                                        <div class="mt-4 flex justify-center">
+                                            <div class="space-y-2 w-full max-w-[180px]">
+                                                <div v-for="(item, index) in ageData" :key="index"
+                                                    class="flex items-center justify-start space-x-2">
+                                                    <div :style="{ backgroundColor: item.color }"
+                                                        class="w-3 h-3 rounded-full"></div>
+                                                    <span class="text-sm">{{ item.name }}: {{ item.value }}%</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
