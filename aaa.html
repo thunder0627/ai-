@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <p v-if="msg.role === 'ai' && (msg.content.includes('.ppt') || msg.content.includes('.pptx') || msg.content.includes('.doc') || msg.content.includes('.docx'))">
+            AI Message
+        </p>
+        <button 
+            class="absolute left-2 bottom-2.5 p-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer transition-all duration-200 transform hover:scale-110"
+        >
+            Action
+        </button>
+    </div>
+</body>
+</html>
