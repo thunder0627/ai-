@@ -235,6 +235,28 @@ createApp({
             isLoggingIn.value = true;
             loginError.value = '';
             try {
+                // 验证输入
+                if (!loginForm.username || !loginForm.password) {
+                    loginError.value = '请输入账号和密码';
+                    isLoggingIn.value = false;
+                    return;
+                }
+
+                // 验证账号是否为有效的电话号码
+                const phoneRegex = /^1[3-9]\d{9}$/;
+                if (!phoneRegex.test(loginForm.username)) {
+                    loginError.value = '请输入有效的电话号码';
+                    isLoggingIn.value = false;
+                    return;
+                }
+
+                // 验证密码长度
+                if (loginForm.password.length < 6 || loginForm.password.length > 12) {
+                    loginError.value = '密码长度必须在6-12位之间';
+                    isLoggingIn.value = false;
+                    return;
+                }
+
                 // 模拟登录成功
                 setTimeout(() => {
                     localStorage.setItem('ai_auth_token', 'fake_token_' + Date.now());
@@ -251,7 +273,7 @@ createApp({
                     isLoggingIn.value = false;
                     showLoginModal.value = false;
 
-                     // 登录成功后，跳转到数据页并执行动画
+                    // 登录成功后，跳转到数据页并执行动画
                     currentView.value = 'dashboard';
 
                     // 重置数据
@@ -352,8 +374,9 @@ createApp({
         // 3. 游客登录
         const guestLogin = () => {
             showLoginModal.value = false;
-            // 游客模式，设置登录状态为true
-            isLoggedIn.value = true;
+            // 游客模式，不设置登录状态
+            localStorage.removeItem('ai_auth_token'); // 清除可能存在的token
+            isLoggedIn.value = false; // 确保登录状态为false
             // 跳转到数据页
             currentView.value = 'dashboard';
 
@@ -501,11 +524,11 @@ createApp({
             // 无论是否登录，都跳转到AI对话页面
             currentView.value = 'chat';
         };
-        
+
         // 权限检查，确保未登录用户只能访问聊天功能
         const checkPermission = (view) => {
             if ((view === 'schedule' || view === 'knowledge') && !isLoggedIn.value) {
-                showLoginModal.value = true;
+                showPermissionModal.value = true;
                 return false;
             }
             return true;
@@ -812,7 +835,7 @@ createApp({
             event.target.value = '';
         };
 
-      return {
+        return {
             isLoggedIn, showLoginModal, isLoggingIn, isRegistering, isSendingCode, countdown, loginError, loginForm, handleLogin, handleRegister, sendVerificationCode, logout,
             isSidebarOpen, toggleSidebar, currentView, enterChatMode, startNewChat, checkPermission, handleKnowledgeClick, handleScheduleClick, handleChatClick, showPermissionModal,
             inputMessage, messages, isLoading, sendMessage, autoResize, formatMessage,
