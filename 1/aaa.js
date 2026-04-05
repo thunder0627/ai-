@@ -352,7 +352,36 @@ createApp({
         // 3. 游客登录
         const guestLogin = () => {
             showLoginModal.value = false;
-            // 游客模式，不需要设置登录状态
+            // 游客模式，设置登录状态为true
+            isLoggedIn.value = true;
+            // 跳转到数据页
+            currentView.value = 'dashboard';
+
+            // 模拟加载历史记录
+            historyList.value = [
+                { id: 1, title: 'PPT设计方案', content: '关于产品发布会的PPT设计', created_at: new Date().toISOString() },
+                { id: 2, title: '市场分析报告', content: '2024年Q1市场分析', created_at: new Date().toISOString() }
+            ];
+            // 模拟加载收藏列表
+            favoritesList.value = [
+                { id: 1, title: '产品规划文档', content: '2024年产品发展规划', created_at: new Date().toISOString() }
+            ];
+
+            // 重置数据
+            progressData.value.attendance = 0;
+            progressData.value.homeworks = 0;
+            progressData.value.rating = 0;
+
+            // 重置柱状图数据
+            chartData.value.forEach(item => {
+                item.value = 0;
+            });
+
+            // 延迟执行，确保DOM已渲染
+            setTimeout(() => {
+                animateProgress();
+                animateChart();
+            }, 300);
         };
 
         // 2. 退出登录
