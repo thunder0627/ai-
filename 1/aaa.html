@@ -103,7 +103,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 2. 主应用容器 -->
         <div class="container">
             <!-- 侧边栏 -->
@@ -112,8 +112,13 @@
                     <div class="sidebar-content">
                         <h1 class="text-xl font-bold mb-6 text-gray-800">智能助手</h1>
                         <div class="flex flex-col space-y-3">
-                            <button @click="startNewChat" class="btn btn-primary w-full">
-                                <i class="fa-solid fa-plus mr-2"></i><span>新建对话</span>
+                            <button @click="() => { currentView = 'dashboard' }"
+                                :class="['btn w-full', currentView === 'dashboard' ? 'btn-primary' : 'btn-secondary']">
+                                <i class="fa-solid fa-chart-pie mr-2"></i><span>数据概览</span>
+                            </button>
+                            <button @click="() => { currentView = 'chat' }"
+                                :class="['btn w-full', currentView === 'chat' ? 'btn-primary' : 'btn-secondary']">
+                                <i class="fa-solid fa-message mr-2"></i><span>AI 对话</span>
                             </button>
                             <button @click="() => { if (checkPermission('schedule')) currentView = 'schedule' }"
                                 :class="['btn w-full', currentView === 'schedule' ? 'btn-primary' : 'btn-secondary']"
@@ -123,7 +128,7 @@
                             <button @click="() => { if (checkPermission('knowledge')) currentView = 'knowledge' }"
                                 :class="['btn w-full', currentView === 'knowledge' ? 'btn-primary' : 'btn-secondary']"
                                 :disabled="!isLoggedIn">
-                                <i class="fa-solid fa-book mr-2"></i><span>知识库</span>
+                                <i class="fa-solid fa-book mr-2"></i><span>思维导图</span>
                             </button>
                         </div>
                         <!-- 登录用户显示历史记录和收藏 -->
@@ -290,7 +295,7 @@
                                 </div>
                             </div>
 
-                             <!-- 柱状图数据展示 -->
+                            <!-- 柱状图数据展示 -->
                             <div class="bg-white rounded-2xl p-8 shadow-sm">
                                 <h2 class="text-xl font-bold text-gray-800 mb-6">新增用户量</h2>
                                 <div class="h-80">
@@ -341,6 +346,13 @@
 
                     <!-- 聊天页 -->
                     <div v-else-if="currentView === 'chat'" class="h-full flex flex-col">
+                        <!-- 新建对话按钮 -->
+                        <div class="p-4 border-b">
+                            <button @click="startNewChat" class="btn btn-primary">
+                                <i class="fa-solid fa-plus mr-2"></i>新建对话
+                            </button>
+                        </div>
+
                         <div id="chat-history" class="chat-history">
                             <div v-for="(msg, index) in messages" :key="index"
                                 :class="['message', msg.role === 'user' ? 'user' : 'ai']">
@@ -486,7 +498,7 @@
                     <!-- 知识库页 -->
                     <div v-else-if="currentView === 'knowledge'" class="h-full overflow-y-auto p-8">
                         <div class="max-w-6xl mx-auto">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-6">知识库 - 思维导图</h2>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">思维导图</h2>
 
                             <!-- 思维导图控制区 -->
                             <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
