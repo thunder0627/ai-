@@ -23,8 +23,9 @@ createApp({
         });
 
         const isSidebarOpen = ref(true);
-        const currentView = ref('welcome'); // 'welcome' | 'chat'
+        const currentView = ref('dashboard');
         const isLoading = ref(false);
+        const showPermissionModal = ref(false); // 权限提示弹窗
 
         const inputMessage = ref('');
         const messages = ref([]);
@@ -448,8 +449,8 @@ createApp({
         // 处理思维导图点击
         const handleKnowledgeClick = () => {
             if (!isLoggedIn.value) {
-                // 显示登录弹窗
-                showLoginModal.value = true;
+                // 显示权限提示弹窗
+                showPermissionModal.value = true;
             } else {
                 // 跳转到知识库页面
                 currentView.value = 'knowledge';
@@ -459,12 +460,18 @@ createApp({
         // 处理课程管理点击
         const handleScheduleClick = () => {
             if (!isLoggedIn.value) {
-                // 显示登录弹窗
-                showLoginModal.value = true;
+                // 显示权限提示弹窗
+                showPermissionModal.value = true;
             } else {
                 // 跳转到课程表页面
                 currentView.value = 'schedule';
             }
+        };
+
+        // 处理教案生成点击
+        const handleChatClick = () => {
+            // 无论是否登录，都跳转到AI对话页面
+            currentView.value = 'chat';
         };
         
         // 权限检查，确保未登录用户只能访问聊天功能
