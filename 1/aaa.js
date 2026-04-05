@@ -64,6 +64,104 @@ createApp({
             { name: '七月', value: 0, target: 320 }
         ]);
 
+        // 用户分布数据
+        const userLocations = ref([
+            { x: 116.4, y: 39.9, count: 180, color: '#ef4444' }, // 北京
+            { x: 121.4, y: 31.2, count: 150, color: '#ef4444' }, // 上海
+            { x: 113.3, y: 23.1, count: 120, color: '#ef4444' }, // 广州
+            { x: 114.1, y: 22.5, count: 100, color: '#ef4444' }, // 深圳
+            { x: 120.2, y: 30.3, count: 90, color: '#f97316' }, // 杭州
+            { x: 118.8, y: 32.1, count: 80, color: '#f97316' }, // 南京
+            { x: 119.9, y: 31.8, count: 70, color: '#f97316' }, // 苏州
+            { x: 112.9, y: 28.2, count: 60, color: '#f97316' }, // 长沙
+            { x: 114.3, y: 30.6, count: 50, color: '#f97316' }, // 武汉
+            { x: 104.1, y: 30.7, count: 45, color: '#eab308' }, // 成都
+            { x: 108.9, y: 34.3, count: 40, color: '#eab308' }, // 西安
+            { x: 123.4, y: 41.8, count: 35, color: '#eab308' }, // 沈阳
+            { x: 117.2, y: 39.1, count: 30, color: '#eab308' }, // 天津
+            { x: 113.6, y: 34.8, count: 25, color: '#eab308' }, // 郑州
+            { x: 106.5, y: 29.5, count: 20, color: '#22c55e' }, // 重庆
+            { x: 115.8, y: 28.7, count: 15, color: '#22c55e' }, // 南昌
+            { x: 119.3, y: 26.1, count: 10, color: '#22c55e' }, // 福州
+            { x: 121.5, y: 25.0, count: 8, color: '#22c55e' }, // 台北
+            { x: 110.3, y: 20.0, count: 5, color: '#22c55e' } // 海口
+        ]);
+
+        // 性别分布数据
+        const genderData = ref([
+            { name: '女性', value: 88.5, color: '#ef4444', path: '' },
+            { name: '男性', value: 11.5, color: '#3b82f6', path: '' }
+        ]);
+
+        // 年龄分布数据
+        const ageData = ref([
+            { name: '25-30岁', value: 50.2, color: '#ef4444', path: '' },
+            { name: '31-35岁', value: 32.9, color: '#f97316', path: '' },
+            { name: '36-40岁', value: 12.4, color: '#eab308', path: '' },
+            { name: '40岁以上', value: 2.5, color: '#22c55e', path: '' },
+            { name: '24岁以下', value: 2.0, color: '#3b82f6', path: '' }
+        ]);
+
+        // 生成饼状图路径
+        const generatePieChart = (progress = 1) => {
+            // 生成性别分布饼状图路径
+            let startAngle = 0;
+            genderData.value.forEach(item => {
+                const angle = (item.value / 100) * 2 * Math.PI * progress;
+                const endAngle = startAngle + angle;
+
+                const x1 = 50 + 45 * Math.cos(startAngle);
+                const y1 = 50 + 45 * Math.sin(startAngle);
+                const x2 = 50 + 45 * Math.cos(endAngle);
+                const y2 = 50 + 45 * Math.sin(endAngle);
+
+                const largeArcFlag = angle > Math.PI ? 1 : 0;
+
+                item.path = `M 50 50 L ${x1} ${y1} A 45 45 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+                startAngle = endAngle;
+            });
+
+            // 生成年龄分布饼状图路径
+            startAngle = 0;
+            ageData.value.forEach(item => {
+                const angle = (item.value / 100) * 2 * Math.PI * progress;
+                const endAngle = startAngle + angle;
+
+                const x1 = 50 + 45 * Math.cos(startAngle);
+                const y1 = 50 + 45 * Math.sin(startAngle);
+                const x2 = 50 + 45 * Math.cos(endAngle);
+                const y2 = 50 + 45 * Math.sin(endAngle);
+
+                const largeArcFlag = angle > Math.PI ? 1 : 0;
+
+                item.path = `M 50 50 L ${x1} ${y1} A 45 45 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+                startAngle = endAngle;
+            });
+        };
+
+        // 动画显示饼状图
+        const animatePieChart = () => {
+            let startTime = null;
+            const duration = 1500; // 动画持续时间
+
+            const animate = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // 使用缓动函数使动画更自然
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+                generatePieChart(easedProgress);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            };
+
+            requestAnimationFrame(animate);
+        };
+
         // 最近活动数据
         const recentActivities = ref([
             {
@@ -197,12 +295,16 @@ createApp({
                 { id: 5, title: '中国历史概览', type: '人文社科', description: '从古代到现代的中国历史发展脉络', created_at: new Date().toISOString() }
             ];
 
-            // 只在用户登录且当前是欢迎页时执行动画
-            if (isLoggedIn.value && currentView.value === 'dashboard') {
+            // 初始化饼状图（0%状态）
+            generatePieChart(0);
+
+            // 只要当前是数据页就执行动画
+            if (currentView.value === 'dashboard') {
                 // 延迟执行，确保DOM已渲染
                 setTimeout(() => {
                     animateProgress();
                     animateChart();
+                    animatePieChart();
                 }, 300);
             }
         });
@@ -220,10 +322,14 @@ createApp({
                     item.value = 0;
                 });
 
+                // 初始化饼状图（0%状态）
+                generatePieChart(0);
+
                 // 延迟执行，确保DOM已渲染
                 setTimeout(() => {
                     animateProgress();
                     animateChart();
+                    animatePieChart();
                 }, 300);
             }
         });
@@ -400,10 +506,14 @@ createApp({
                 item.value = 0;
             });
 
+            // 初始化饼状图（0%状态）
+            generatePieChart(0);
+
             // 延迟执行，确保DOM已渲染
             setTimeout(() => {
                 animateProgress();
                 animateChart();
+                animatePieChart();
             }, 300);
         };
 
@@ -843,7 +953,7 @@ createApp({
             courseList, courseForm, addCourse, deleteCourse, uploadCourseware, deleteCourseware, getFileIcon,
             knowledgeList, knowledgeTypes, knowledgeForm, addKnowledge, deleteKnowledge, getKnowledgeByType, getKnowledgeTypeIcon, formatDate,
             isGeneratingMindMap, mindMapData, generateMindMap, refreshMindMap, exportMindMap, guestLogin,
-            progressData, chartData, recentActivities
+            progressData, chartData, recentActivities, genderData, ageData
         };
     }
 }).mount('#app');
